@@ -85,15 +85,13 @@ abstract class HabiticaBaseApplication : MultiDexApplication() {
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
-        if (!BuildConfig.DEBUG) {
             try {
                 Amplitude.getInstance().initialize(this, getString(R.string.amplitude_app_id)).enableForegroundTracking(this)
                 val identify = Identify().setOnce("androidStore", BuildConfig.STORE)
                 Amplitude.getInstance().identify(identify)
             } catch (ignored: Resources.NotFoundException) {
             }
-
-        }
+        
         val config = ImagePipelineConfig.newBuilder(this)
                 .setDownsampleEnabled(true)
                 .build()
