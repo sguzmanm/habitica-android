@@ -58,6 +58,8 @@ import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import javax.inject.Inject
 
+private const val SHOW_FORM="show"
+
 class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
 
     @Inject
@@ -144,7 +146,7 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-            supportActionBar?.hide()
+        supportActionBar?.hide()
         //Set default values to avoid null-responses when requesting unedited settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences_fragment, false)
 
@@ -177,6 +179,21 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
         forgotPasswordButton.setOnClickListener { onForgotPasswordClicked() }
         facebookLoginButton.setOnClickListener { handleFacebookLogin() }
         googleLoginButton.setOnClickListener { handleGoogleLogin() }
+
+        val tempShow=savedInstanceState?.getBoolean(SHOW_FORM)
+        isShowingForm=tempShow?:false
+    }
+
+    override fun onStart() {
+        if(isShowingForm){
+            showForm()
+        }
+        super.onStart()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(SHOW_FORM,isShowingForm)
+        super.onSaveInstanceState(outState)
     }
 
     private fun setupFacebookLogin() {
