@@ -18,8 +18,8 @@ import java.util.*
 class LoginBackgroundView(context: Context, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
     private val random: Random = Random()
 
-    private val leftCloudView: ImageView by bindView(R.id.left_cloud_view)
-    private val rightCloudView: ImageView by bindView(R.id.right_cloud_view)
+    //private val leftCloudView: ImageView by bindView(R.id.left_cloud_view)
+    //private val rightCloudView: ImageView by bindView(R.id.right_cloud_view)
 
     private var starViews: MutableList<StarView>? = null
     private var viewWidth: Int = 0
@@ -53,14 +53,16 @@ class LoginBackgroundView(context: Context, attrs: AttributeSet?) : RelativeLayo
     }
 
     private fun animateClouds() {
-        val leftAnimator = ObjectAnimator.ofFloat(leftCloudView, View.TRANSLATION_Y, 10.0f).setDuration(5000)
+        return
+
+        /*val leftAnimator = ObjectAnimator.ofFloat(leftCloudView, View.TRANSLATION_Y, 10.0f).setDuration(5000)
         leftAnimator.repeatCount = ValueAnimator.INFINITE
         leftAnimator.repeatMode = ValueAnimator.REVERSE
         leftAnimator.start()
         val rightAnimator = ObjectAnimator.ofFloat(rightCloudView, View.TRANSLATION_Y, -10.0f).setDuration(8000)
         rightAnimator.repeatCount = ValueAnimator.INFINITE
         rightAnimator.repeatMode = ValueAnimator.REVERSE
-        rightAnimator.start()
+        rightAnimator.start()*/
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

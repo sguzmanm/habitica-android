@@ -49,8 +49,6 @@ import com.habitrpg.android.habitica.proxy.CrashlyticsProxy
 import com.habitrpg.android.habitica.ui.helpers.bindView
 import com.habitrpg.android.habitica.ui.helpers.dismissKeyboard
 import com.habitrpg.android.habitica.ui.views.dialogs.HabiticaAlertDialog
-import com.habitrpg.android.habitica.ui.views.login.LockableScrollView
-import com.habitrpg.android.habitica.ui.views.login.LoginBackgroundView
 import io.reactivex.Flowable
 import io.reactivex.exceptions.Exceptions
 import io.reactivex.functions.Consumer
@@ -81,8 +79,8 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
     private var isRegistering: Boolean = false
     private var isShowingForm: Boolean = false
 
-    private val backgroundContainer: LockableScrollView by bindView(R.id.background_container)
-    internal val backgroundView: LoginBackgroundView by bindView(R.id.background_view)
+    //private val backgroundContainer: LockableScrollView by bindView(R.id.background_container)
+    //internal val backgroundView: LoginBackgroundView by bindView(R.id.background_view)
     internal val newGameButton: Button by bindView(R.id.new_game_button)
     internal val showLoginButton: Button by bindView(R.id.show_login_button)
     internal val scrollView: ScrollView by bindView(R.id.login_scrollview)
@@ -164,8 +162,8 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
         additionalData["page"] = this.javaClass.simpleName
         AmplitudeManager.sendEvent("navigate", AmplitudeManager.EVENT_CATEGORY_NAVIGATION, AmplitudeManager.EVENT_HITTYPE_PAGEVIEW, additionalData)
 
-        backgroundContainer.post { backgroundContainer.scrollTo(0, backgroundContainer.bottom) }
-        backgroundContainer.setScrollingEnabled(false)
+       // backgroundContainer.post { backgroundContainer.scrollTo(0, backgroundContainer.bottom) }
+       // backgroundContainer.setScrollingEnabled(false)
 
         val window = window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -477,7 +475,6 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
 
     private fun showForm() {
         isShowingForm = true
-        val panAnimation = ObjectAnimator.ofInt(backgroundContainer, "scrollY", 0).setDuration(1000)
         val newGameAlphaAnimation = ObjectAnimator.ofFloat<View>(newGameButton, View.ALPHA, 0.toFloat())
         val showLoginAlphaAnimation = ObjectAnimator.ofFloat<View>(showLoginButton, View.ALPHA, 0.toFloat())
         val scaleLogoAnimation = ValueAnimator.ofInt(logoView.measuredHeight, (logoView.measuredHeight * 0.75).toInt())
@@ -514,14 +511,14 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
         }
         val backAlphaAnimation = ObjectAnimator.ofFloat<View>(backButton, View.ALPHA, 1.toFloat()).setDuration(800)
         val showAnimation = AnimatorSet()
-        showAnimation.playTogether(panAnimation, newGameAlphaAnimation, showLoginAlphaAnimation, scaleLogoAnimation)
-        showAnimation.play(backAlphaAnimation).after(panAnimation)
+        showAnimation.playTogether(newGameAlphaAnimation, showLoginAlphaAnimation, scaleLogoAnimation)
+        showAnimation.play(backAlphaAnimation)
         for (i in 0 until formWrapper.childCount) {
             val view = formWrapper.getChildAt(i)
             view.alpha = 0f
             val animator = ObjectAnimator.ofFloat<View>(view, View.ALPHA, 1.toFloat()).setDuration(400)
             animator.startDelay = (100 * i).toLong()
-            showAnimation.play(animator).after(panAnimation)
+            showAnimation.play(animator)
         }
 
         showAnimation.start()
@@ -529,7 +526,6 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
 
     private fun hideForm() {
         isShowingForm = false
-        val panAnimation = ObjectAnimator.ofInt(backgroundContainer, "scrollY", backgroundContainer.bottom).setDuration(1000)
         val newGameAlphaAnimation = ObjectAnimator.ofFloat<View>(newGameButton, View.ALPHA, 1.toFloat()).setDuration(700)
         val showLoginAlphaAnimation = ObjectAnimator.ofFloat<View>(showLoginButton, View.ALPHA, 1.toFloat()).setDuration(700)
         val scaleLogoAnimation = ValueAnimator.ofInt(logoView.measuredHeight, (logoView.measuredHeight * 1.333333).toInt())
@@ -550,7 +546,7 @@ class LoginActivity : BaseActivity(), Consumer<UserAuthResponse> {
         })
         val backAlphaAnimation = ObjectAnimator.ofFloat<View>(backButton, View.ALPHA, 0.toFloat()).setDuration(800)
         val showAnimation = AnimatorSet()
-        showAnimation.playTogether(panAnimation, scrollViewAlphaAnimation, backAlphaAnimation, scaleLogoAnimation)
+        showAnimation.playTogether(scrollViewAlphaAnimation, backAlphaAnimation, scaleLogoAnimation)
         showAnimation.play(newGameAlphaAnimation).after(scrollViewAlphaAnimation)
         showAnimation.play(showLoginAlphaAnimation).after(scrollViewAlphaAnimation)
         showAnimation.start()

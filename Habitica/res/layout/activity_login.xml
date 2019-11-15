@@ -2,9 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_gradient"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.activities.LoginActivity">
 
+    <!--
     <com.habitrpg.android.habitica.ui.views.login.LockableScrollView
         android:id="@+id/background_container"
         android:layout_width="match_parent"
@@ -65,10 +67,12 @@
 
     </com.habitrpg.android.habitica.ui.views.login.LockableScrollView>
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
+        -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -122,8 +126,9 @@
                 android:scrollIndicators="none"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/logo_view"
-                tools:layout_editor_absoluteX="16dp"
                 tools:visibility="visible">
 
                 <LinearLayout
@@ -245,6 +250,6 @@
             android:background="@color/transparent"
             android:paddingStart="12dp"
             android:alpha="0" />
-    </FrameLayout>
+    <!--</FrameLayout>-->
 
 </FrameLayout>
