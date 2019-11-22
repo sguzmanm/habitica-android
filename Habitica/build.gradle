@@ -249,6 +249,10 @@ android {
         disable 'MissingTranslation','InvalidPackage'
         enable 'LogConditional','IconExpectedSize','MissingRegistered','TypographyQuotes'
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 Properties props = new Properties()
