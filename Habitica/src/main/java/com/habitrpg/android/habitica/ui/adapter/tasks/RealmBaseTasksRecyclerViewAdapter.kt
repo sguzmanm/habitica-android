@@ -9,13 +9,14 @@ import com.habitrpg.android.habitica.models.responses.TaskDirection
 import com.habitrpg.android.habitica.models.tasks.ChecklistItem
 import com.habitrpg.android.habitica.models.tasks.Task
 import com.habitrpg.android.habitica.ui.viewHolders.tasks.BaseTaskViewHolder
+import com.habitrpg.android.habitica.ui.viewHolders.tasks.HabitViewHolder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.functions.Action
 import io.reactivex.subjects.PublishSubject
 import io.realm.*
 
-abstract class RealmBaseTasksRecyclerViewAdapter<VH : BaseTaskViewHolder>(
+abstract class RealmBaseTasksRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         private var unfilteredData: OrderedRealmCollection<Task>?,
         private val hasAutoUpdates: Boolean,
         private val layoutResource: Int,
@@ -128,14 +129,24 @@ abstract class RealmBaseTasksRecyclerViewAdapter<VH : BaseTaskViewHolder>(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = getItem(position)
         if (item != null) {
-            holder.bind(item, position)
-            holder.errorButtonClicked = Action {
-                errorButtonEventsSubject.onNext("")
+            if(holder is HabitViewHolder){
+                holder.bind(item, position)
+                holder.errorButtonClicked = Action {
+                    errorButtonEventsSubject.onNext("")
+                }
             }
+
+            if(holder is BaseTaskViewHolder){
+                holder.bind(item, position)
+                holder.errorButtonClicked = Action {
+                    errorButtonEventsSubject.onNext("")
+                }
+            }
+
         }
     }
 
-    internal fun getContentView(parent: ViewGroup): View = getContentView(parent, layoutResource)
+    open fun getContentView(parent: ViewGroup): View = getContentView(parent, layoutResource)
 
     private fun getContentView(parent: ViewGroup, layoutResource: Int): View =
             LayoutInflater.from(parent.context).inflate(layoutResource, parent, false)

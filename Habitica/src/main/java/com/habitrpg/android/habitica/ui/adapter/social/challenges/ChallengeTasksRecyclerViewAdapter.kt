@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.databinding.ViewDataBinding
 import com.habitrpg.android.habitica.R
 import com.habitrpg.android.habitica.components.UserComponent
 import com.habitrpg.android.habitica.helpers.TaskFilterHelper
@@ -15,6 +16,10 @@ import com.habitrpg.android.habitica.ui.viewHolders.tasks.*
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.subjects.PublishSubject
+import androidx.databinding.DataBindingUtil
+import com.habitrpg.android.habitica.databinding.HabitItemCardBinding
+import com.habitrpg.android.habitica.extensions.layoutInflater
+
 
 class ChallengeTasksRecyclerViewAdapter(taskFilterHelper: TaskFilterHelper?, layoutResource: Int,
                                         newContext: Context, userID: String, sortCallback: SortTasksCallback?,
@@ -61,11 +66,17 @@ class ChallengeTasksRecyclerViewAdapter(taskFilterHelper: TaskFilterHelper?, lay
         return position
     }
 
+    /*fun parseBinding(parent:ViewGroup,id:Int):ViewDataBinding{
+        return DataBindingUtil.inflate(
+                null, id, parent, false)
+    }*/
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder<Task> {
         val viewHolder: BindableViewHolder<Task> = when (viewType) {
-            TYPE_HABIT -> HabitViewHolder(getContentView(parent, R.layout.habit_item_card), { _, _ -> }) { task ->
-                taskOpenEventsSubject.onNext(task)
-            }
+            /*TYPE_HABIT ->
+                HabitViewHolder(parseBinding(parent, R.layout.habit_item_card) as HabitItemCardBinding, { _, _ -> }) { task ->
+                    taskOpenEventsSubject.onNext(task)
+                }*/
             TYPE_DAILY -> DailyViewHolder(getContentView(parent, R.layout.daily_item_card), { _, _ -> }, { _, _ -> }) { task ->
                 taskOpenEventsSubject.onNext(task)
             }

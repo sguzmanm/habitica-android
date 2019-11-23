@@ -49,4 +49,9 @@ class RecyclerViewEmptySupport : RecyclerView {
         this.emptyView = emptyView
         checkIfEmpty()
     }
+
+    override fun onDetachedFromWindow() {
+        emptyView=null
+        super.onDetachedFromWindow()
+    }
 }

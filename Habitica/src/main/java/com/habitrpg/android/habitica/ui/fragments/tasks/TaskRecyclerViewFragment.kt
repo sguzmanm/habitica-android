@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
@@ -18,6 +19,8 @@ import com.habitrpg.android.habitica.data.ApiClient
 import com.habitrpg.android.habitica.data.InventoryRepository
 import com.habitrpg.android.habitica.data.TaskRepository
 import com.habitrpg.android.habitica.data.UserRepository
+import com.habitrpg.android.habitica.databinding.FragmentRefreshRecyclerviewBinding
+
 import com.habitrpg.android.habitica.extensions.setScaledPadding
 import com.habitrpg.android.habitica.extensions.subscribeWithErrorHandler
 import com.habitrpg.android.habitica.helpers.AppConfigManager
@@ -45,9 +48,13 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
+
+
 open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
     var recyclerAdapter: TaskRecyclerViewAdapter? = null
-    var itemAnimator = SafeDefaultItemAnimator()
+    // var itemAnimator = SafeDefaultItemAnimator()
+    private var binding:FragmentRefreshRecyclerviewBinding?=null
+
     @field:[Inject Named(AppModule.NAMED_USER_ID)]
     lateinit var userID: String
     @Inject
@@ -93,7 +100,7 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
         }
 
         recyclerAdapter = adapter as? TaskRecyclerViewAdapter
-        recyclerView.adapter = adapter
+        binding!!.recyclerView.adapter = adapter
 
         if (this.classType != null) {
             compositeSubscription.add(taskRepository.getTasks(this.classType ?: "", userID).firstElement().subscribe(Consumer {
@@ -130,7 +137,7 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
 
     private fun allowReordering() {
         val itemTouchHelper = itemTouchCallback?.let { ItemTouchHelper(it) }
-        itemTouchHelper?.attachToRecyclerView(recyclerView)
+        itemTouchHelper?.attachToRecyclerView(binding!!.recyclerView)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -204,7 +211,11 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
             this.classType = savedInstanceState.getString(CLASS_TYPE_KEY, "")
         }
 
-        return inflater.inflate(R.layout.fragment_refresh_recyclerview, container, false)
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_refresh_recyclerview, container, false)
+
+
+        return binding!!.root
     }
 
     protected open fun getLayoutManager(context: Context?): androidx.recyclerview.widget.LinearLayoutManager {
@@ -212,13 +223,28 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding!!.recyclerView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                // no-op
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+                binding!!.recyclerView.adapter = null
+            }
+        })
+
         itemTouchCallback = null
+        recyclerAdapter=null
+
+        super.onDestroyView()
     }
 
     override fun onDestroy() {
         userRepository.close()
         inventoryRepository.close()
+        recyclerAdapter=null
+        itemTouchCallback = null
+
         super.onDestroy()
     }
 
@@ -228,15 +254,15 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.setScaledPadding(context, 0, 0, 0, 48)
-        recyclerView.adapter = recyclerAdapter as? RecyclerView.Adapter<*>
+        binding!!.recyclerView.setScaledPadding(context, 0, 0, 0, 48)
+        binding!!.recyclerView.adapter = recyclerAdapter as? RecyclerView.Adapter<*>
         recyclerAdapter?.filter()
 
         layoutManager = getLayoutManager(context)
         layoutManager?.isItemPrefetchEnabled = false
-        recyclerView.layoutManager = layoutManager
+        binding!!.recyclerView.layoutManager = layoutManager
 
-        if (recyclerView.adapter == null) {
+        if (binding!!.recyclerView.adapter == null) {
             this.setInnerAdapter()
         }
 
@@ -259,13 +285,13 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
                     }?.subscribeWithErrorHandler(Consumer {})?.let { compositeSubscription.add(it) }
         }
 
-        val bottomPadding = (recyclerView.paddingBottom + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, resources.displayMetrics)).toInt()
-        recyclerView.setPadding(0, 0, 0, bottomPadding)
-        recyclerView.itemAnimator = itemAnimator
+        val bottomPadding = (binding!!.recyclerView.paddingBottom + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, resources.displayMetrics)).toInt()
+        binding!!.recyclerView.setPadding(0, 0, 0, bottomPadding)
+        // binding!!.recyclerView.itemAnimator = itemAnimator
 
         refreshLayout.setOnRefreshListener(this)
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding!!.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {

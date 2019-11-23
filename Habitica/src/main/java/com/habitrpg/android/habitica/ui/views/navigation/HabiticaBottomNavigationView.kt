@@ -1,6 +1,10 @@
 package com.habitrpg.android.habitica.ui.views.navigation
 
+import com.habitrpg.android.habitica.databinding.MainNavigationViewBinding
+
+
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
@@ -16,9 +20,12 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
+import androidx.databinding.DataBindingUtil
 import com.habitrpg.android.habitica.R
+import com.habitrpg.android.habitica.databinding.ActivityTaskFormBinding
 import com.habitrpg.android.habitica.extensions.getThemeColor
 import com.habitrpg.android.habitica.extensions.inflate
+import com.habitrpg.android.habitica.extensions.layoutInflater
 import com.habitrpg.android.habitica.models.tasks.Task
 import com.habitrpg.android.habitica.ui.helpers.bindView
 
@@ -27,37 +34,40 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
+    private var binding: MainNavigationViewBinding? = null
+
     var flipAddBehaviour = true
     private var isShowingSubmenu: Boolean = false
     var selectedPosition: Int
-    get() {
-        return when (activeTaskType) {
-            Task.TYPE_DAILY -> 1
-            Task.TYPE_REWARD -> 2
-            Task.TYPE_TODO -> 3
-            else -> 0
+        get() {
+            return when (activeTaskType) {
+                Task.TYPE_DAILY -> 1
+                Task.TYPE_REWARD -> 2
+                Task.TYPE_TODO -> 3
+                else -> 0
+            }
         }
-    }
-    set(value) {
-        activeTaskType = when (value) {
-            1 -> Task.TYPE_DAILY
-            2 -> Task.TYPE_TODO
-            3 -> Task.TYPE_REWARD
-            else -> Task.TYPE_HABIT
+        set(value) {
+            activeTaskType = when (value) {
+                1 -> Task.TYPE_DAILY
+                2 -> Task.TYPE_TODO
+                3 -> Task.TYPE_REWARD
+                else -> Task.TYPE_HABIT
+            }
         }
-    }
     var onTabSelectedListener: ((String) -> Unit)? = null
-    var onAddListener:  ((String) -> Unit)? = null
+    var onAddListener: ((String) -> Unit)? = null
     var activeTaskType: String = Task.TYPE_HABIT
-    set(value) {
-        field = value
-        updateItemSelection()
-        onTabSelectedListener?.invoke(value)
-    }
+        set(value) {
+            field = value
+            updateItemSelection()
+            onTabSelectedListener?.invoke(value)
+        }
 
     val barHeight: Int
-        get() = itemWrapper.measuredHeight
+        get() = binding!!.itemWrapper.measuredHeight
 
+    /*
     private val cutoutBackgroundView: ImageView by bindView(R.id.cutout_background)
     private val habitsTab: BottomNavigationItem by bindView(R.id.tab_habits)
     private val dailiesTab: BottomNavigationItem by bindView(R.id.tab_dailies)
@@ -67,14 +77,17 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
     private val addButtonBackground: ViewGroup by bindView(R.id.add_wrapper)
     private val submenuWrapper: LinearLayout by bindView(R.id.submenu_wrapper)
     private val itemWrapper: ViewGroup by bindView(R.id.item_wrapper)
+    */
+
 
     init {
-        inflate(R.layout.main_navigation_view, true)
-        habitsTab.setOnClickListener { activeTaskType = Task.TYPE_HABIT }
-        dailiesTab.setOnClickListener { activeTaskType = Task.TYPE_DAILY }
-        todosTab.setOnClickListener { activeTaskType = Task.TYPE_TODO }
-        rewardsTab.setOnClickListener { activeTaskType = Task.TYPE_REWARD }
-        addButton.setOnClickListener {
+        binding = DataBindingUtil.inflate(context.layoutInflater, R.layout.main_navigation_view, this, true)
+
+        binding!!.tabHabits.setOnClickListener { activeTaskType = Task.TYPE_HABIT }
+        binding!!.tabDailies.setOnClickListener { activeTaskType = Task.TYPE_DAILY }
+        binding!!.tabTodos.setOnClickListener { activeTaskType = Task.TYPE_TODO }
+        binding!!.tabRewards.setOnClickListener { activeTaskType = Task.TYPE_REWARD }
+        binding!!.add.setOnClickListener {
             if (flipAddBehaviour) {
                 if (isShowingSubmenu) {
                     hideSubmenu()
@@ -86,7 +99,7 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
             }
             animateButtonTap()
         }
-        addButton.setOnLongClickListener {
+        binding!!.add.setOnLongClickListener {
             if (flipAddBehaviour) {
                 showSubmenu()
             } else {
@@ -95,52 +108,55 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
             animateButtonTap()
             true
         }
-        addButton.setOnTouchListener { _, event ->
+        /*
+        binding!!.add.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                val animX = ObjectAnimator.ofFloat(addButton, "scaleX", 1f, 1.1f)
+                val animX = ObjectAnimator.ofFloat(binding!!.add, "scaleX", 1f, 1.1f)
                 animX.duration = 100
                 animX.interpolator = LinearInterpolator()
                 animX.start()
-                val animY = ObjectAnimator.ofFloat(addButton, "scaleY", 1f, 1.1f)
+                val animY = ObjectAnimator.ofFloat(binding!!.add, "scaleY", 1f, 1.1f)
                 animY.duration = 100
                 animY.interpolator = LinearInterpolator()
                 animY.start()
-                val animXBackground = ObjectAnimator.ofFloat(addButtonBackground, "scaleX", 1f, 0.9f)
+                val animXBackground = ObjectAnimator.ofFloat(binding!!.addWrapper, "scaleX", 1f, 0.9f)
                 animXBackground.duration = 100
                 animXBackground.interpolator = LinearInterpolator()
                 animXBackground.start()
-                val animYBackground = ObjectAnimator.ofFloat(addButtonBackground, "scaleY", 1f, 0.9f)
+                val animYBackground = ObjectAnimator.ofFloat(binding!!.addWrapper, "scaleY", 1f, 0.9f)
                 animYBackground.duration = 100
                 animYBackground.interpolator = LinearInterpolator()
                 animYBackground.start()
             }
             false
-        }
-        submenuWrapper.setOnClickListener { hideSubmenu() }
+        }*/
+        binding!!.submenuWrapper.setOnClickListener { hideSubmenu() }
         updateItemSelection()
 
         val cutout = context.getDrawable(R.drawable.bottom_navigation_inset)
         cutout?.setColorFilter(context.getThemeColor(R.attr.barColor), PorterDuff.Mode.MULTIPLY)
-        cutoutBackgroundView.setImageDrawable(cutout)
+        binding!!.cutoutBackground.setImageDrawable(cutout)
         val fabBackground = context.getDrawable(R.drawable.fab_background)
         fabBackground?.setColorFilter(context.getThemeColor(R.attr.colorAccent), PorterDuff.Mode.MULTIPLY)
-        addButtonBackground.background = fabBackground
+        binding!!.addWrapper.background = fabBackground
     }
 
     private fun animateButtonTap() {
-        val animX = ObjectAnimator.ofFloat(addButton, "scaleX", 1.3f, 1f)
+        return
+
+        val animX = ObjectAnimator.ofFloat(binding!!.add, "scaleX", 1.3f, 1f)
         animX.duration = 400
         animX.interpolator = BounceInterpolator()
         animX.start()
-        val animY = ObjectAnimator.ofFloat(addButton, "scaleY", 1.3f, 1f)
+        val animY = ObjectAnimator.ofFloat(binding!!.add, "scaleY", 1.3f, 1f)
         animY.duration = 400
         animY.interpolator = BounceInterpolator()
         animY.start()
-        val animXBackground = ObjectAnimator.ofFloat(addButtonBackground, "scaleX", 0.9f, 1f)
+        val animXBackground = ObjectAnimator.ofFloat(binding!!.addWrapper, "scaleX", 0.9f, 1f)
         animXBackground.duration = 600
         animXBackground.interpolator = BounceInterpolator()
         animXBackground.start()
-        val animYBackground = ObjectAnimator.ofFloat(addButtonBackground, "scaleY", 0.9f, 1f)
+        val animYBackground = ObjectAnimator.ofFloat(binding!!.addWrapper, "scaleY", 0.9f, 1f)
         animYBackground.duration = 600
         animYBackground.interpolator = BounceInterpolator()
         animYBackground.start()
@@ -154,10 +170,10 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
         rotate.duration = 250
         rotate.interpolator = LinearInterpolator()
         rotate.fillAfter = true
-        addButton.startAnimation(rotate)
+        binding!!.add.startAnimation(rotate)
 
         var pos = 4
-        submenuWrapper.removeAllViews()
+        binding!!.submenuWrapper.removeAllViews()
         for (taskType in listOf(Task.TYPE_HABIT, Task.TYPE_DAILY, Task.TYPE_TODO, Task.TYPE_REWARD)) {
             val view = BottomNavigationSubmenuItem(context)
             when (taskType) {
@@ -182,7 +198,7 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
                 onAddListener?.invoke(taskType)
                 hideSubmenu()
             }
-            submenuWrapper.addView(view)
+            binding!!.submenuWrapper.addView(view)
             view.alpha = 0f
             view.scaleY = 0.7f
             ViewCompat.animate(view).alpha(1f).setDuration(250.toLong()).startDelay = (100 * pos).toLong()
@@ -190,7 +206,7 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
             pos -= 1
         }
         var widestWidth = 0
-        for (view in submenuWrapper.children) {
+        for (view in binding!!.submenuWrapper.children) {
             if (view is BottomNavigationSubmenuItem) {
                 val width = view.measuredTitleWidth
                 if (widestWidth < width) {
@@ -198,7 +214,7 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
                 }
             }
         }
-        for (view in submenuWrapper.children) {
+        for (view in binding!!.submenuWrapper.children) {
             if (view is BottomNavigationSubmenuItem) {
                 view.setTitleWidth(widestWidth)
             }
@@ -213,31 +229,38 @@ class HabiticaBottomNavigationView @JvmOverloads constructor(
         rotate.duration = 250
         rotate.interpolator = LinearInterpolator()
         rotate.fillAfter = true
-        addButton.startAnimation(rotate)
+        binding!!.add.startAnimation(rotate)
 
-        for (view in submenuWrapper.children) {
+        for (view in binding!!.submenuWrapper.children) {
             view.alpha = 1f
             view.scaleY = 1f
             ViewCompat.animate(view).alpha(0f).setDuration(200.toLong()).startDelay = (150 * pos).toLong()
-            ViewCompat.animate(view).scaleY(0.7f).setDuration(250.toLong()).setStartDelay((100 * pos).toLong()).withEndAction { submenuWrapper.removeView(view) }
+            ViewCompat.animate(view).scaleY(0.7f).setDuration(250.toLong()).setStartDelay((100 * pos).toLong()).withEndAction { binding!!.submenuWrapper.removeView(view) }
             pos += 1
         }
     }
 
     fun tabWithId(id: Int): BottomNavigationItem? {
         return when(id) {
-            R.id.tab_habits -> habitsTab
-            R.id.tab_dailies -> dailiesTab
-            R.id.tab_todos -> rewardsTab
-            R.id.tab_rewards -> todosTab
+            R.id.tab_habits -> binding!!.tabHabits
+            R.id.tab_dailies -> binding!!.tabDailies
+            R.id.tab_todos -> binding!!.tabRewards
+            R.id.tab_rewards -> binding!!.tabTodos
             else -> null
         }
     }
 
     private fun updateItemSelection() {
-        habitsTab.isActive = activeTaskType == Task.TYPE_HABIT
-        dailiesTab.isActive = activeTaskType == Task.TYPE_DAILY
-        todosTab.isActive = activeTaskType == Task.TYPE_TODO
-        rewardsTab.isActive = activeTaskType == Task.TYPE_REWARD
+        binding!!.tabHabits.isActive = activeTaskType == Task.TYPE_HABIT
+        binding!!.tabDailies.isActive = activeTaskType == Task.TYPE_DAILY
+        binding!!.tabTodos.isActive = activeTaskType == Task.TYPE_TODO
+        binding!!.tabRewards.isActive = activeTaskType == Task.TYPE_REWARD
+    }
+
+    override fun onDetachedFromWindow() {
+        binding=null
+        onTabSelectedListener=null
+        onAddListener=null
+        super.onDetachedFromWindow()
     }
 }

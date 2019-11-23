@@ -1,40 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:baselineAligned="false"
-        android:foreground="?selectableItemBackground"
-        android:orientation="horizontal"
-        android:minHeight="@dimen/task_min_height">
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/syncing_view"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toStartOf="@+id/error_icon"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageButton
+            android:id="@+id/error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_warning_black"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toStartOf="@+id/btnMinusWrapper"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+            app:layout_constraintVertical_bias="0.487" />
 
         <FrameLayout
-            android:id="@+id/btnPlusWrapper"
+            android:id="@+id/btnMinusWrapper"
             android:layout_width="@dimen/button_width"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginBottom="1dp"
                 android:background="@color/task_border_gray" />
 
             <ImageView
-                android:id="@+id/btnPlusIconView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/btnMinusIconView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:scaleType="center"
-                android:src="@drawable/habit_plus" />
+                android:src="@drawable/habit_minus" />
 
             <Button
-                android:id="@+id/btnPlus"
+                android:id="@+id/btnMinus"
                 style="@style/HabitButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,23 +67,27 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/task_top_bottom_padding"
-            android:paddingEnd="@dimen/task_text_padding"
-            android:paddingLeft="@dimen/task_text_padding"
-            android:paddingRight="@dimen/task_text_padding"
             android:paddingStart="@dimen/task_text_padding"
-            android:paddingTop="@dimen/task_top_bottom_padding">
+            android:paddingLeft="@dimen/task_text_padding"
+            android:paddingTop="@dimen/task_top_bottom_padding"
+            android:paddingEnd="@dimen/task_text_padding"
+            android:paddingRight="@dimen/task_text_padding"
+            android:paddingBottom="@dimen/task_top_bottom_padding"
+            app:layout_constraintEnd_toStartOf="@+id/syncing_view"
+            app:layout_constraintStart_toEndOf="@+id/btnPlusWrapper"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.habitrpg.android.habitica.ui.views.EllipsisTextView
                 android:id="@+id/checkedTextView"
                 style="@style/Subheader3"
-                android:textColor="#000"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#000"
                 tools:text="Habit Title" />
 
             <com.habitrpg.android.habitica.ui.views.EllipsisTextView
@@ -66,25 +95,25 @@
                 style="@style/Caption2.Regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
                 android:ellipsize="end"
-                tools:text="Notes"/>
+                android:maxLines="3"
+                tools:text="Notes" />
 
             <Button
                 android:id="@+id/expand_notes_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:text="@string/expand_notes"
                 android:padding="0dp"
+                android:text="@string/expand_notes"
                 android:textColor="?colorAccent" />
+
             <TextView
-                    android:id="@+id/approvalRequiredTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Caption4"
-                    android:text="@string/pending_approval"
-                    />
+                android:id="@+id/approvalRequiredTextField"
+                style="@style/Caption4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pending_approval" />
 
             <LinearLayout
                 android:id="@+id/taskIconWrapper"
@@ -104,16 +133,16 @@
 
                 <TextView
                     android:id="@+id/streakTextView"
+                    style="@style/Caption3"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/task_icon_size"
                     android:layout_marginStart="@dimen/task_icon_space"
                     android:layout_marginLeft="@dimen/task_icon_space"
                     android:drawableStart="@drawable/task_icon_streak"
                     android:drawableLeft="@drawable/task_icon_streak"
-                    android:textColor="@color/task_secondary_text"
-                    tools:text="10"
                     android:gravity="center_vertical"
-                    style="@style/Caption3" />
+                    android:textColor="@color/task_secondary_text"
+                    tools:text="10" />
 
                 <ImageView
                     android:id="@+id/iconviewChallenge"
@@ -142,55 +171,35 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/syncing_view"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/spacing_small"
-            android:layout_marginRight="@dimen/spacing_small"
-            style="@style/Widget.AppCompat.ProgressBar"/>
-        <ImageButton
-            android:id="@+id/error_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_warning_black"
-            android:layout_marginLeft="@dimen/spacing_small"
-            android:layout_marginRight="@dimen/spacing_small"/>
         <FrameLayout
-            android:id="@+id/btnMinusWrapper"
+            android:id="@+id/btnPlusWrapper"
             android:layout_width="@dimen/button_width"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="start"
+                android:layout_gravity="end"
                 android:layout_marginBottom="1dp"
                 android:background="@color/task_border_gray" />
 
             <ImageView
-                android:id="@+id/btnMinusIconView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
+                android:id="@+id/btnPlusIconView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="center"
-                android:src="@drawable/habit_minus" />
+                android:src="@drawable/habit_plus" />
 
             <Button
-                android:id="@+id/btnMinus"
+                android:id="@+id/btnPlus"
                 style="@style/HabitButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/selection_highlight" />
         </FrameLayout>
-    </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:background="@color/task_border_gray" />
-</FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
