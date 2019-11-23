@@ -296,8 +296,6 @@ open class HabitViewHolder(private val cardBinding: HabitItemCardBinding?, priva
     }
 
     //------New-------//
-
-
     private fun onPlusButtonClicked() {
         task?.let { scoreTaskFunc.invoke(it, TaskDirection.UP) }
     }

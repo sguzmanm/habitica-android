@@ -130,13 +130,14 @@ open class MainActivity : BaseActivity(), TutorialView.OnTutorialReaction {
     private val toolbarTitleTextView: TextView by bindView(R.id.toolbar_title)
     private val collapsingToolbar: CollapsingToolbarLayout by bindView(R.id.collapsing_toolbar)
     internal val detailTabs: TabLayout? by bindOptionalView(R.id.detail_tabs)
+
+    private var avatarInHeader: AvatarWithBarsViewModel? = null
     val avatarWithBars: View by bindView(R.id.avatar_with_bars)
     private val overlayLayout: ViewGroup by bindView(R.id.overlayFrameLayout)
 
     private val connectionIssueTextView: TextView by bindView(R.id.connection_issue_textview)
     var user: User? = null
 
-    private var avatarInHeader: AvatarWithBarsViewModel? = null
     private var notificationsViewModel: NotificationsViewModel? = null
     private var faintDialog: HabiticaAlertDialog? = null
     private var sideAvatarView: AvatarView? = null

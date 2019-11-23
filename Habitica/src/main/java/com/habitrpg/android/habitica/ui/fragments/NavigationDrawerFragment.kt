@@ -93,7 +93,7 @@ class NavigationDrawerFragment : DialogFragment() {
                 adapter.tintColor = it.getThemeColor(R.attr.colorPrimary)
                 adapter.backgroundTintColor = it.getThemeColor(R.attr.colorPrimaryOffset)
             }
-            adapter.items.filter { it.identifier == SIDEBAR_TAVERN }.forEach {
+            adapter.items?.filter { it.identifier == SIDEBAR_TAVERN }?.forEach {
                 it.additionalInfo = null
             }
             return
@@ -121,7 +121,7 @@ class NavigationDrawerFragment : DialogFragment() {
         }*/
         questMenuView.hideBossArt()
 
-        adapter.items.filter { it.identifier == SIDEBAR_TAVERN }.forEach {
+        adapter.items?.filter { it.identifier == SIDEBAR_TAVERN }?.forEach {
             it.additionalInfo = context?.getString(R.string.active_world_boss)
             it.additionalInfoAsPill = false
         }
@@ -168,7 +168,7 @@ class NavigationDrawerFragment : DialogFragment() {
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         initializeMenuItems()
 
-        subscriptions?.add(adapter.getItemSelectionEvents().subscribe(Consumer {
+        subscriptions?.add(adapter.getItemSelectionEvents()!!.subscribe(Consumer {
             setSelection(it.transitionId, it.bundle, true)
         }, RxErrorHandler.handleEmptyError()))
 
