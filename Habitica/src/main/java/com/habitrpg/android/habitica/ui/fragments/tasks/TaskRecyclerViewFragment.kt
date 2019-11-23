@@ -160,7 +160,7 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
                 if (taskViewHolder != null) {
                     taskViewHolder.movingFromPosition = viewHolder.adapterPosition
                 }
-                refreshLayout.isEnabled = false
+                binding!!.refreshLayout.isEnabled = false
             }
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -210,8 +210,6 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
         if (savedInstanceState != null) {
             this.classType = savedInstanceState.getString(CLASS_TYPE_KEY, "")
         }
-
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_refresh_recyclerview, container, false)
 
 
@@ -232,6 +230,8 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
                 binding!!.recyclerView.adapter = null
             }
         })
+
+        binding!!.refreshLayout.isEnabled=false
 
         itemTouchCallback = null
         recyclerAdapter=null
@@ -289,13 +289,13 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
         binding!!.recyclerView.setPadding(0, 0, 0, bottomPadding)
         // binding!!.recyclerView.itemAnimator = itemAnimator
 
-        refreshLayout.setOnRefreshListener(this)
+        binding!!.refreshLayout.setOnRefreshListener(this)
 
         binding!!.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    refreshLayout?.isEnabled = (activity as? MainActivity)?.isAppBarExpanded ?: false
+                    binding!!.refreshLayout.isEnabled = (activity as? MainActivity)?.isAppBarExpanded ?: false
                 }
             }
         })
@@ -341,12 +341,13 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
         get() = this.classType + super.displayedClassName
 
     override fun onRefresh() {
-        refreshLayout.isRefreshing = true
+        binding!!.refreshLayout.isRefreshing = true
         compositeSubscription.add(userRepository.retrieveUser(true, true)
                 .doOnTerminate {
                     refreshLayout?.isRefreshing = false
                 }.subscribe(Consumer { }, RxErrorHandler.handleEmptyError()))
     }
+
 
     fun setActiveFilter(activeFilter: String) {
         taskFilterHelper.setActiveFilter(classType ?: "", activeFilter)

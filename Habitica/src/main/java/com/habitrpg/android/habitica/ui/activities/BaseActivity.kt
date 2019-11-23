@@ -126,6 +126,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         destroyed = true
+        currentTheme = null
+        forcedTheme = null
 
         if (!compositeSubscription.isDisposed) {
             compositeSubscription.dispose()
