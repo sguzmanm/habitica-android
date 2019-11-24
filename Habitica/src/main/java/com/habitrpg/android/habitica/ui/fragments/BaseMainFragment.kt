@@ -85,11 +85,11 @@ abstract class BaseMainFragment : BaseFragment() {
     }
 
     private fun hideToolbar() {
-        activity?.avatarWithBars?.visibility = View.GONE
+        //activity?.avatarWithBars?.visibility = View.GONE
     }
 
     private fun showToolbar() {
-        activity?.avatarWithBars?.visibility = View.VISIBLE
+        //activity?.avatarWithBars?.visibility = View.VISIBLE
     }
 
     private fun disableToolbarScrolling() {

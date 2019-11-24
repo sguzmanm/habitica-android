@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.facebook.drawee.view.SimpleDraweeView
@@ -37,10 +38,12 @@ import com.habitrpg.android.habitica.api.HostConfig
 import com.habitrpg.android.habitica.api.MaintenanceApiService
 import com.habitrpg.android.habitica.components.UserComponent
 import com.habitrpg.android.habitica.data.*
+import com.habitrpg.android.habitica.databinding.AvatarWithBarsBinding
 import com.habitrpg.android.habitica.events.*
 import com.habitrpg.android.habitica.events.commands.FeedCommand
 import com.habitrpg.android.habitica.extensions.DateUtils
 import com.habitrpg.android.habitica.extensions.dpToPx
+import com.habitrpg.android.habitica.extensions.layoutInflater
 import com.habitrpg.android.habitica.extensions.subscribeWithErrorHandler
 import com.habitrpg.android.habitica.helpers.*
 import com.habitrpg.android.habitica.helpers.notifications.PushNotificationManager
@@ -82,12 +85,19 @@ import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.avatar_with_bars.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
 import javax.inject.Inject
 
 open class MainActivity : BaseActivity(), TutorialView.OnTutorialReaction {
+    // -------------
+    // Avatar binding
+    // -------------
+    private var avatarBinding: AvatarWithBarsBinding? = null
+
+
     @Inject
     internal lateinit var apiClient: ApiClient
     @Inject
@@ -132,7 +142,6 @@ open class MainActivity : BaseActivity(), TutorialView.OnTutorialReaction {
     internal val detailTabs: TabLayout? by bindOptionalView(R.id.detail_tabs)
 
     private var avatarInHeader: AvatarWithBarsViewModel? = null
-    val avatarWithBars: View by bindView(R.id.avatar_with_bars)
     private val overlayLayout: ViewGroup by bindView(R.id.overlayFrameLayout)
 
     private val connectionIssueTextView: TextView by bindView(R.id.connection_issue_textview)
@@ -175,7 +184,10 @@ open class MainActivity : BaseActivity(), TutorialView.OnTutorialReaction {
 
         setupToolbar(toolbar)
 
-        avatarInHeader = AvatarWithBarsViewModel(this, avatarWithBars, userRepository)
+        // val viewRoot = LayoutInflater.from(this).inflate(R.layout.avatar_with_bars, avatarView.parent as ViewGroup, false)
+        // avatarBinding = DataBindingUtil.bind(viewRoot)
+        // avatarInHeader = AvatarWithBarsViewModel(this, avatarBinding, userRepository)
+
         sideAvatarView = AvatarView(this, showBackground = true, showMount = false, showPet = false)
 
         compositeSubscription.add(userRepository.getUser()
@@ -415,6 +427,9 @@ open class MainActivity : BaseActivity(), TutorialView.OnTutorialReaction {
     public override fun onDestroy() {
         userRepository.close()
         inventoryRepository.close()
+
+        avatarInHeader=null
+        avatarBinding=null
         super.onDestroy()
     }
 

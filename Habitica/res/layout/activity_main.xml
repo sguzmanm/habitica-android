@@ -37,13 +37,13 @@
                     app:expandedTitleMarginStart="0dp"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                    <include
+                    <!--<include
                         android:id="@+id/avatar_with_bars"
                         layout="@layout/avatar_with_bars"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="?attr/actionBarSize"
-                        app:layout_collapseMode="parallax" />
+                        app:layout_collapseMode="parallax" />-->
 
                     <androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbar"

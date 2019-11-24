@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
+import androidx.databinding.DataBindingUtil
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.drawee.view.SimpleDraweeView
@@ -19,6 +20,7 @@ import com.habitrpg.android.habitica.components.UserComponent
 import com.habitrpg.android.habitica.data.ApiClient
 import com.habitrpg.android.habitica.data.InventoryRepository
 import com.habitrpg.android.habitica.data.SocialRepository
+import com.habitrpg.android.habitica.databinding.AvatarWithBarsBinding
 import com.habitrpg.android.habitica.helpers.MainNavigationController
 import com.habitrpg.android.habitica.helpers.RxErrorHandler
 import com.habitrpg.android.habitica.helpers.UserStatComputer
@@ -40,6 +42,7 @@ import com.habitrpg.android.habitica.ui.views.dialogs.HabiticaAlertDialog
 import io.reactivex.Flowable
 import io.reactivex.functions.Consumer
 import io.realm.RealmResults
+import kotlinx.android.synthetic.main.avatar_with_bars.*
 import net.pherth.android.emoji_library.EmojiEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,6 +51,12 @@ import kotlin.math.floor
 import kotlin.math.min
 
 class FullProfileActivity : BaseActivity() {
+    //----------
+    // UI
+    //----------
+    private var avatarBinding: AvatarWithBarsBinding? = null
+
+
     @Inject
     lateinit var inventoryRepository: InventoryRepository
     @Inject
@@ -113,7 +122,9 @@ class FullProfileActivity : BaseActivity() {
         attributeRows.clear()
         attributesCardView.setOnClickListener { toggleAttributeDetails() }
 
-        avatarWithBars = AvatarWithBarsViewModel(this, avatarWithStatsView)
+        val viewRoot = LayoutInflater.from(this).inflate(R.layout.avatar_with_bars, avatarView.parent as ViewGroup, false)
+        avatarBinding = DataBindingUtil.bind(viewRoot)
+        avatarWithBars = AvatarWithBarsViewModel(this, avatarBinding)
 
         sendMessageButton.setOnClickListener { showSendMessageToUserDialog() }
         giftGemsButton.setOnClickListener { MainNavigationController.navigate(R.id.giftGemsActivity, bundleOf(Pair("userID", userID), Pair("username", null))) }
@@ -122,6 +133,9 @@ class FullProfileActivity : BaseActivity() {
 
     override fun onDestroy() {
         inventoryRepository.close()
+
+        avatarWithBars=null
+        avatarBinding=null
         super.onDestroy()
     }
 
