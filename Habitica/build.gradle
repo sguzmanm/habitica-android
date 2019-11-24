@@ -103,7 +103,7 @@ dependencies {
     //Tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.assertj:assertj-core:2.6.0'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-4'
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation 'org.robolectric:shadows-multidex:3.8'
     testImplementation 'org.mockito:mockito-core:2.8.9'
@@ -112,8 +112,7 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4-rule:1.7.0'
     testImplementation 'org.powermock:powermock-module-junit4:1.7.0'
     //Leak Detection
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-4'
     //Push Notifications
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'

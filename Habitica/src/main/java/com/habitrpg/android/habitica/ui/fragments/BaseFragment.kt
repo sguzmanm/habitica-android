@@ -14,6 +14,7 @@ import com.habitrpg.android.habitica.ui.activities.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
+import leakcanary.AppWatcher
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.EventBusException
 import java.util.*
@@ -101,10 +102,6 @@ abstract class BaseFragment : DialogFragment() {
         }
 
         super.onDestroyView()
-        context?.let {
-            val refWatcher = HabiticaBaseApplication.getInstance(it)?.refWatcher
-            refWatcher?.watch(this)
-        }
     }
 
     override fun onDestroy() {
@@ -112,6 +109,8 @@ abstract class BaseFragment : DialogFragment() {
             tutorialRepository.close()
         } catch (exception: UninitializedPropertyAccessException) {/* no-on */ }
         super.onDestroy()
+
+        AppWatcher.objectWatcher.watch(this)
     }
 
     open fun addToBackStack(): Boolean = true

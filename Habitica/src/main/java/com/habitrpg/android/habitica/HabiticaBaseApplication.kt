@@ -33,8 +33,6 @@ import com.habitrpg.android.habitica.ui.activities.IntroActivity
 import com.habitrpg.android.habitica.ui.activities.LoginActivity
 import com.habitrpg.android.habitica.ui.helpers.MarkdownParser
 import com.habitrpg.android.habitica.ui.views.HabiticaIconsHelper
-import com.squareup.leakcanary.LeakCanary
-import com.squareup.leakcanary.RefWatcher
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.solovyev.android.checkout.Billing
@@ -45,7 +43,6 @@ import javax.inject.Inject
 
 //contains all HabiticaApplicationLogic except dagger componentInitialisation
 abstract class HabiticaBaseApplication : MultiDexApplication() {
-    var refWatcher: RefWatcher? = null
     @Inject
     internal lateinit var lazyApiHelper: ApiClient
     @Inject
@@ -69,16 +66,10 @@ abstract class HabiticaBaseApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
-        }
         setupRealm()
         setupDagger()
         setupRemoteConfig()
         setupNotifications()
-        refWatcher = LeakCanary.install(this)
         createBillingAndCheckout()
         HabiticaIconsHelper.init(this)
         MarkdownParser.setup(this)
