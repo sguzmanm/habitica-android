@@ -52,7 +52,6 @@ import javax.inject.Named
 
 open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
     var recyclerAdapter: TaskRecyclerViewAdapter? = null
-    // var itemAnimator = SafeDefaultItemAnimator()
     private var binding:FragmentRefreshRecyclerviewBinding?=null
 
     @field:[Inject Named(AppModule.NAMED_USER_ID)]
@@ -287,7 +286,6 @@ open class TaskRecyclerViewFragment : BaseFragment(), androidx.swiperefreshlayou
 
         val bottomPadding = (binding!!.recyclerView.paddingBottom + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, resources.displayMetrics)).toInt()
         binding!!.recyclerView.setPadding(0, 0, 0, bottomPadding)
-        // binding!!.recyclerView.itemAnimator = itemAnimator
 
         binding!!.refreshLayout.setOnRefreshListener(this)
 
